@@ -61,7 +61,10 @@ class LinkedList:
         cur.val = value
 
     def __repr__(self):
-        return self._head
+        return {
+            "length": self._length,
+            "head": self._head
+        }
 
     def __str__(self):
         if self._length == 0:
