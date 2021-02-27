@@ -61,9 +61,7 @@ class LinkedList:
         cur.val = value
 
     def __repr__(self):
-        # return "Printing a linked list could be a very expensive operation.\
-        #      If you're sure you want to do this, convert the list to a string \
-        #         first."
+        return self._head
 
     def __str__(self):
         if self._length == 0:
