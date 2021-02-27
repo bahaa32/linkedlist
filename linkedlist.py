@@ -1,10 +1,13 @@
-from typing import Optional
+from typing import Iterator, Optional
 
 class ListNode:
     # TODO: Add option to pass unlimited number of args
     def __init__(self, val):
         self.val = val
         self.next = None
+
+    def __eq__(self, other_node) -> bool:
+        return self.val == other_node.val
 
     def __str__(self) -> str:
         return self.val
@@ -14,16 +17,14 @@ class LinkedList:
         self._head: Optional[ListNode] = None
         self._length: int = 0
         self._last_node: Optional[ListNode] = None
-
-    def __eq__(self, other_node: ListNode) -> bool:
-        return self.val == other_node.val
+        # TODO: add self._cur
 
     def __delattr__(self, val) -> None:
         # First node should be deleted
         if self[0].val == val:
             self[0] = self[0].next
             self._length -= 1
-        for node in len(self):
+        for node in self._nodes():
             if node.next == val:
                 # Bypass second node and point directly to third node.
                 #   This removes all references from LinkedList to the
@@ -70,6 +71,18 @@ class LinkedList:
         if self._length == 0:
             return "LinkedList()"
         text = "LinkedList("
-        for val in self.values():
+        for val in self:
             text += str(val) + ", "
         return text[:-2] + ")"
+
+    def __iter__(self) -> Iterator:
+        cur = self._head
+        while cur is not None:
+            yield cur.value
+            cur = cur.next
+
+    def _nodes(self) -> Iterator:
+        cur = self._head
+        while cur is not None:
+            yield cur.value
+            cur = cur.next
