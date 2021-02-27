@@ -24,7 +24,7 @@ class LinkedList:
         self._head: Optional[ListNode] = None
         self._length: int = 0
         self._last_node: Optional[ListNode] = None
-        self._cur = (0, None)
+        self._cur =[0, None]
         # TODO: add self._cur
 
     def __delitem__(self, index) -> None:
@@ -32,7 +32,7 @@ class LinkedList:
         if index == 0:
             self._head = self._head.next
             if self._cur[0] == 0:
-                self._cur = (0, self._head)
+                self._cur = [0, self._head]
         else:
             cur.next = cur.next.next
             self._length -= 1
@@ -105,7 +105,7 @@ class LinkedList:
             cur = self._head
             for _ in range(0, index):
                 cur = cur.next
-            self._cur = (index, cur)
+            self._cur = [index, cur]
         return cur
 
     def append(self, val) -> None:
@@ -120,7 +120,7 @@ class LinkedList:
     def clear(self) -> None:
         self._head = None
         self._length = 0
-        self._cur = (0, None)
+        self._cur = [0, None]
 
     def copy(self) -> LinkedList:
         new_list = LinkedList()
@@ -146,9 +146,18 @@ class LinkedList:
 
     def insert(self, pos: int, value) -> None:
         new_node = ListNode(value)
-        cur = self._node_at(pos-1)
+        if pos == 0:
+            new_node.next = self._head
+            self._head = new_node
+            self._cur[0] += 1
+            self._length += 1
+            return
+        cur = self._node_at(pos)
+        if id(cur) == id(self._last_node):
+            new_node.next = self._last_node
         new_node.next = cur.next
         cur.next = new_node
+        self._length += 1
 
     def pop(self, index: Optional[int] = -1):
         value = self[index]
