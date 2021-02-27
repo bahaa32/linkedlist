@@ -24,47 +24,26 @@ class LinkedList:
         self._head: Optional[ListNode] = None
         self._length: int = 0
         self._last_node: Optional[ListNode] = None
+        self._cur = (0, None)
         # TODO: add self._cur
 
     def __delitem__(self, index) -> None:
-        # Index beyond list
-        if self._length <= index > -1 * self._length:
-            raise IndexError
-        # Index is first element
+        cur = self._node_at(index-1)
         if index == 0:
-            if self._head is not None:
-                self._head = self._head.next
-                self._length -= 1
-                return
-        # Check if index is negative
-        if index < 0:
-            index += self._length
-        cur = self._head
-        for _ in range(0, index - 1):
-            cur = cur.next
-        cur.next = cur.next.next
-        self._length -= 1
-        if index == len(self) - 1:
-            self._last_node = cur
+            self._head = self._head.next
+            if self._cur[0] == 0:
+                self._cur = (0, self._head)
+        else:
+            cur.next = cur.next.next
+            self._length -= 1
+            if index == len(self) - 1:
+                self._last_node = cur
 
     def __len__(self) -> int:
         return self._length
 
     def __setitem__(self, index: int, value) -> None:
-        # Index beyond list
-        if self._length <= index > -1 * self._length:
-            raise IndexError
-        # Check if index is negative
-        if index < 0:
-            index += self._length
-        # Index is last element
-        if index == self._length - 1:
-            self._last_node.val = value
-            return
-        cur = self._head
-        for _ in range(0, index):
-            cur = cur.next
-        cur.val = value
+        self._node_at(index).val = value
 
     def __repr__(self) -> str: # pragma: no cover
         return str({
@@ -89,29 +68,45 @@ class LinkedList:
 
     # TODO: DRY
     def __getitem__(self, index: int):
-        # Index beyond list
-        if index >= self._length:
+        node = self._node_at(index)
+        if node is not None:
+            return node.val
+        else:
             raise IndexError
-        # Index is first element
-        if index == 0:
-            return self._head.val
-        # Index is last element
-        if index == self._length - 1:
-            return self._last_node.val
-        # Check if index is negative and in possible
-        #   range of indeces
-        if index < 0 and index > -1 * self._length:
-            index += self._length
-        cur = self._head
-        for _ in range(0, index):
-            cur = cur.next
-        return cur.val
 
     def _nodes(self) -> Iterator:
         cur = self._head
         while cur is not None:
             yield cur
             cur = cur.next
+
+    # Inspired by llist
+    def _node_at(self, index: int) -> ListNode:
+        # Index beyond list
+        if self._length <= index > -1 * self._length:
+            raise IndexError
+        # Index is first element
+        if index == 0:
+            return self._head
+        # Index is last element
+        if index == self._length - 1:
+            return self._last_node
+        # Check if index is negative and in possible
+        #   range of indeces
+        if index < 0:
+            index += self._length
+        if self._cur[0] == index:
+            return self._cur[1]
+        if self._cur[0] < index and self._cur[1] is not None:
+            cur = self._cur[1]
+            for _ in range(self._cur[0], index):
+                cur = cur.next
+        else:
+            cur = self._head
+            for _ in range(0, index):
+                cur = cur.next
+            self._cur = (index, cur)
+        return cur
 
     def append(self, val) -> None:
         new_node = ListNode(val)
@@ -125,6 +120,7 @@ class LinkedList:
     def clear(self) -> None:
         self._head = None
         self._length = 0
+        self._cur = (0, None)
 
     def copy(self) -> LinkedList:
         new_list = LinkedList()
@@ -143,13 +139,16 @@ class LinkedList:
         for val in iterable:
             self.append(val)
 
-    # For the commented functions, waiting until I define _find()
+    def index(self, value) -> int:
+        for idx, val in enumerate(self):
+            if val == value:
+                return idx
 
-    # def index(self, value) -> int:
-    #     pass
-
-    # def insert(self, pos: int, value) -> None:
-    #     pass
+    def insert(self, pos: int, value) -> None:
+        new_node = ListNode(value)
+        cur = self._node_at(pos-1)
+        new_node.next = cur.next
+        cur.next = new_node
 
     def pop(self, index: Optional[int] = -1):
         value = self[index]

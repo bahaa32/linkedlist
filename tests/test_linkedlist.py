@@ -1,13 +1,13 @@
 import pytest
 from linkedlist import LinkedList, ListNode
 
-new_ll = LinkedList()
-new_ll.append("Hello, world1!")
-new_ll.append("Hello, world2!")
-new_ll.append("Hello, world3!")
-print(new_ll)
-del new_ll[2]
-print(str(new_ll))
+# new_ll = LinkedList()
+# new_ll.append("Hello, world1!")
+# new_ll.append("Hello, world2!")
+# new_ll.append("Hello, world3!")
+# print(new_ll)
+# del new_ll[2]
+# print(str(new_ll))
 
 def test_create_list():
     assert isinstance(LinkedList(), LinkedList)
