@@ -1,14 +1,6 @@
 import pytest
 from linkedlist import LinkedList, ListNode
 
-# new_ll = LinkedList()
-# new_ll.append("Hello, world1!")
-# new_ll.append("Hello, world2!")
-# new_ll.append("Hello, world3!")
-# print(new_ll)
-# del new_ll[2]
-# print(str(new_ll))
-
 def test_create_list():
     assert isinstance(LinkedList(), LinkedList)
 
@@ -185,3 +177,29 @@ def test_repr():
     new_ll = LinkedList()
     new_ll.__repr__()
     new_ll.__str__()
+
+def test_insert():
+    new_ll = LinkedList()
+    new_ll.extend(range(5))
+    new_ll.insert(2, "a")
+    new_ll.insert(0, "b")
+    new_ll.insert(-1, "c")
+    assert new_ll[4] == "a"
+    assert new_ll[3] == 2
+    assert new_ll[0] == "b"
+    assert new_ll[-1] == "c"
+    assert new_ll[-2] == 4
+
+def test_index():
+    new_ll = LinkedList()
+    new_ll.append(1)
+    new_ll.extend(range(3))
+    assert new_ll.index(1) == 0
+    del new_ll[0]
+    assert new_ll.index(1) == 1
+
+def test_iterinit():
+    new_ll = LinkedList([1, 0, 1, 2, 3, 4])
+    assert new_ll.index(1) == 0
+    del new_ll[0]
+    assert new_ll.index(1) == 1

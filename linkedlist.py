@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import Iterator, Optional
 
 class ListNode:
-    # TODO: Add option to pass unlimited number of args
     def __init__(self, val):
         self.val = val
         self.next: Optional[ListNode] = None
@@ -20,12 +19,13 @@ class ListNode:
         return self.val
 
 class LinkedList:
-    def __init__(self):
+    def __init__(self, iterator: Optional[Iterator] = None):
         self._head: Optional[ListNode] = None
         self._length: int = 0
         self._last_node: Optional[ListNode] = None
         self._cur =[0, None]
-        # TODO: add self._cur
+        if iterator is not None:
+            self.extend(iterator)
 
     def __delitem__(self, index) -> None:
         cur = self._node_at(index-1)
@@ -51,7 +51,6 @@ class LinkedList:
             "head": self._head
         })
 
-    # TODO: Improve output based on value type
     def __str__(self) -> str: # pragma: no cover
         if self._length == 0:
             return "LinkedList()"
@@ -66,7 +65,6 @@ class LinkedList:
             yield cur.val
             cur = cur.next
 
-    # TODO: DRY
     def __getitem__(self, index: int):
         node = self._node_at(index)
         if node is not None:
