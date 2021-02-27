@@ -1,5 +1,5 @@
-from typing import Iterator, Optional
 from __future__ import annotations
+from typing import Iterator, Optional
 
 class ListNode:
     # TODO: Add option to pass unlimited number of args
@@ -7,13 +7,16 @@ class ListNode:
         self.val = val
         self.next: Optional[ListNode] = None
 
-    def __eq__(self, other_node) -> bool:
-        return self.val == other_node.val
+    def __eq__(self, other) -> bool:
+        if isinstance(other, ListNode):
+            return self.val == other.val
+        return self.val == other
 
-    def __repr__(self) -> str:
+
+    def __repr__(self) -> str: # pragma: no cover
         return f"ListNode({type(self.val).__name__}({self.val}))"
 
-    def __str__(self) -> str:
+    def __str__(self) -> str: # pragma: no cover
         return self.val
 
 class LinkedList:
@@ -25,7 +28,7 @@ class LinkedList:
 
     def __delitem__(self, index) -> None:
         # Index beyond list
-        if self._length  <= index > -1 * self._length:
+        if self._length <= index > -1 * self._length:
             raise IndexError
         # Index is first element
         if index == 0:
@@ -41,40 +44,41 @@ class LinkedList:
             cur = cur.next
         cur.next = cur.next.next
         self._length -= 1
+        if index == len(self) - 1:
+            self._last_node = cur
 
-    def __sizeof__(self) -> int:
+    def __len__(self) -> int:
         return self._length
 
     def __setitem__(self, index: int, value) -> None:
         # Index beyond list
-        if index >= self._length:
+        if self._length <= index > -1 * self._length:
             raise IndexError
+        # Check if index is negative
+        if index < 0:
+            index += self._length
         # Index is last element
         if index == self._length - 1:
             self._last_node.val = value
             return
-        # Check if index is negative and in possible
-        #   range of indeces
-        if index < 0 and index > -1 * self._length:
-            index += self._length
         cur = self._head
         for _ in range(0, index):
             cur = cur.next
         cur.val = value
 
-    def __repr__(self) -> str:
+    def __repr__(self) -> str: # pragma: no cover
         return str({
             "length": self._length,
             "head": self._head
         })
 
     # TODO: Improve output based on value type
-    def __str__(self) -> str:
+    def __str__(self) -> str: # pragma: no cover
         if self._length == 0:
             return "LinkedList()"
         text = "LinkedList("
         for val in self:
-            text += str(val) + ", "
+            text += f"{type(val).__name__}({str(val)}), "
         return text[:-2] + ")"
 
     def __iter__(self) -> Iterator:
@@ -120,6 +124,7 @@ class LinkedList:
 
     def clear(self) -> None:
         self._head = None
+        self._length = 0
 
     def copy(self) -> LinkedList:
         new_list = LinkedList()
@@ -153,9 +158,10 @@ class LinkedList:
 
     def remove(self, val) -> None:
         # First node should be deleted
-        if self[0].val == val:
-            self[0] = self[0].next
+        if self[0] == val:
+            self._head = self._head.next
             self._length -= 1
+            return
         for node in self._nodes():
             if node.next == val:
                 # Bypass second node and point directly to third node.
@@ -163,12 +169,13 @@ class LinkedList:
                 #   node and it is garbage collected.
                 node.next = node.next.next
                 self._length -= 1
+                return
 
     # Not sure how to implement
     # def reverse(self)
 
     # Bubble sort is possible here but possibly not as fast.
-    def sort(self, value) -> None:
+    def sort(self) -> None:
         # Could be faster than list(self) because length is known
         new_array = len(self) * [None]
         for idx, val in enumerate(self):
@@ -180,31 +187,6 @@ class LinkedList:
             cur.val = val
             cur = cur.next
 
-    def remove(self, val) -> None:
-        # First node should be deleted
-        if self[0].val == val:
-            self[0] = self[0].next
-            self._length -= 1
-        for node in self._nodes():
-            if node.next == val:
-                # Bypass second node and point directly to third node.
-                #   This removes all references from LinkedList to the
-                #   node and it is garbage collected.
-                node.next = node.next.next
-                self._length -= 1
-
     # Not sure how to implement
-    # def reverse(self)
-
-    # Bubble sort is possible here but possibly not as fast.
-    def sort(self, value) -> None:
-        # Could be faster than list(self) because length is known
-        new_array = len(self) * [None]
-        for idx, val in enumerate(self):
-            new_array[idx] = val
-        # Let python sort it better than we can
-        new_array.sort()
-        cur = self._head
-        for val in new_array:
-            cur.val = val
-            cur = cur.next
+    # def reverse(self):
+        # pass
