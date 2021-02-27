@@ -114,7 +114,18 @@ def test_reverse_even():
     assert new_ll[0] == 9
     assert new_ll[1] == 2
     assert new_ll[2] == 1
-    assert new_ll[2] == 4
+    assert new_ll[3] == 4
+
+def test_reverse_empty():
+    new_ll = LinkedList()
+    new_ll.reverse()
+    assert str(new_ll) == "LinkedList()"
+
+def test_reverse_one():
+    new_ll = LinkedList()
+    new_ll.append(1)
+    new_ll.reverse()
+    assert str(new_ll) == "LinkedList(int(1))"
 
 def test_sort():
     new_ll = LinkedList()
@@ -169,7 +180,7 @@ def test_eq_node():
     assert ListNode(3) != 2
     assert ListNode(3) != ListNode(2)
 
-@pytest.mark.skip(reason="Subject to change")
+@pytest.mark.skip(reason="subject to change")
 def test_repr():
     new_ll = LinkedList()
     new_ll.__repr__()

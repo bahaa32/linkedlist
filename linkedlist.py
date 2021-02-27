@@ -171,8 +171,17 @@ class LinkedList:
                 self._length -= 1
                 return
 
-    # Not sure how to implement
-    # def reverse(self)
+    # https://www.geeksforgeeks.org/reverse-a-linked-list/
+    # Thanks for the great explainer!
+    def reverse(self):
+        prev = None
+        cur = self._head
+        for _ in range(len(self)):
+            next_node = cur.next
+            cur.next = prev
+            prev = cur
+            cur = next_node
+        self._last_node, self._head = self._head, self._last_node
 
     # Bubble sort is possible here but possibly not as fast.
     def sort(self) -> None:
@@ -186,7 +195,3 @@ class LinkedList:
         for val in new_array:
             cur.val = val
             cur = cur.next
-
-    # Not sure how to implement
-    # def reverse(self):
-        # pass
